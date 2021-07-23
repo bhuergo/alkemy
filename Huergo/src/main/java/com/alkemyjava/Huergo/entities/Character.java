@@ -12,13 +12,17 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Genero implements Serializable {
+public class Character implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long genreId;
-    private String name;
+    private Long characterId;
+    @Lob
     private byte[] image;
-    @OneToMany
-    private List<Pelicula> movies;
+    private String name;
+    private Long age;
+    private Long weight;
+    private String history;
+    @ManyToMany
+    private List<Movie> movies;
 
 }
