@@ -22,7 +22,7 @@ public class Character implements Serializable {
     private Long age;
     private Long weight;
     private String history;
-    @ManyToMany
+    @ManyToMany(mappedBy = "characters")
     private List<Movie> movies;
 
 }

@@ -54,4 +54,12 @@ public class CharacterController {
         characterService.edit(characterId,image,name,age,weight,history);
         return new RedirectView("/characters/all"); //por ejemplo, luego de que se modifica un personaje que redireccione al listado de todos los personajes
     }
+
+    //mostrar detalles de un personaje
+    @GetMapping("/details/{characterId}")
+    public ModelAndView details(@PathVariable Long characterId) {
+        ModelAndView mav = new ModelAndView("");
+        mav.addObject("character", characterService.findById(characterId));
+        return mav;
+    }
 }

@@ -5,7 +5,6 @@ import com.alkemyjava.Huergo.repositories.CharacterRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,6 +44,11 @@ public class CharacterService {
 
     @Transactional
     public void edit(Long characterId, byte[] image, String name, Long age, Long weight, String history) {
+        characterRepository.modify(characterId, image, name, age, weight, history);
+    }
 
+    @Transactional(readOnly = true)
+    public List<Character> allCharacters() {
+        return characterRepository.findAll();
     }
 }
