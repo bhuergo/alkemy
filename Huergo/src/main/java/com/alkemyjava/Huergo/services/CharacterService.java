@@ -51,4 +51,10 @@ public class CharacterService {
     public List<Character> allCharacters() {
         return characterRepository.findAll();
     }
+
+    @Transactional(readOnly = true)
+    public List<Character> filter(String search, String filter) {
+
+        return characterRepository.filtered();
+    }
 }

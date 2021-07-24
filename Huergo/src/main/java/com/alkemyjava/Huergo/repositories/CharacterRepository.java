@@ -18,4 +18,8 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
     @Modifying
     @Query("UPDATE Character c SET c.image = :image, c.name = :name, c.age = :age, c.weight = :weight, c.history = :history WHERE c.characterId = :characterId")
     public void modify(@Param("characterId") Long characterId, @Param("image") byte[] image, @Param("name") String name, @Param("age") Long age, @Param("weight") Long weight, @Param("history") String history);
+
+    @Query("SELECT c FROM Character c")
+    public List<Character> filtered();
+
 }

@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Controller
 @RequestMapping("/characters")
 public class CharacterController {
@@ -60,6 +63,17 @@ public class CharacterController {
     public ModelAndView details(@PathVariable Long characterId) {
         ModelAndView mav = new ModelAndView("");
         mav.addObject("character", characterService.findById(characterId));
+        return mav;
+    }
+
+    //búsqueda de personajes
+    @GetMapping("/")
+    @ResponseBody
+    public ModelAndView search(@RequestParam(name = "search", required = false) String search, @RequestParam(name = "filter", required = false) String filter) {
+
+
+
+        ModelAndView mav = new ModelAndView("");
         return mav;
     }
 }
