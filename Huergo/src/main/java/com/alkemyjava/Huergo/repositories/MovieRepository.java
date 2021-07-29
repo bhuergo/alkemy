@@ -15,9 +15,9 @@ import java.util.List;
 public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     @Query("SELECT m.image, m.title, m.creationDate FROM Movie m")
-    public List<Movie> showAll();
+    List<Movie> showAll();
 
     @Modifying
     @Query("UPDATE Movie m SET m.image = :image, m.title = :title, m.creationDate = :creationDate, m.rating = :rating, m.characters = :characters WHERE m.movieId = :movieId")
-    public void modify(@Param("movieId") Long movieId, @Param("image") byte[] image, @Param("title") String title, @Param("creationDate") Date creationDate, @Param("rating") Long rating, @Param("characters") List<Character> characters);
+    void modify(@Param("movieId") Long movieId, @Param("image") byte[] image, @Param("title") String title, @Param("creationDate") Date creationDate, @Param("rating") Long rating, @Param("characters") List<Character> characters);
 }

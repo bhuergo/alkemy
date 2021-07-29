@@ -13,13 +13,19 @@ import java.util.List;
 public interface CharacterRepository extends JpaRepository<Character, Long> {
 
     @Query("SELECT c.image, c.name FROM Character c")
-    public List<Character> showAll();
+    List<Character> showAll();
 
     @Modifying
-    @Query("UPDATE Character c SET c.image = :image, c.name = :name, c.age = :age, c.weight = :weight, c.history = :history WHERE c.characterId = :characterId")
-    public void modify(@Param("characterId") Long characterId, @Param("image") byte[] image, @Param("name") String name, @Param("age") Long age, @Param("weight") Long weight, @Param("history") String history);
+    @Query("UPDATE Character c SET c.image = :image, c.name = :name, c.age = :age, c.weight = :weight, c.story = :story WHERE c.characterId = :characterId")
+    void modify(@Param("characterId") Long characterId, @Param("image") byte[] image, @Param("name") String name, @Param("age") Long age, @Param("weight") Long weight, @Param("story") String story);
 
-    @Query("SELECT c FROM Character c")
-    public List<Character> filtered();
+    @Query(value = "SELECT * FROM character c WHERE c.name like %:search% and c.age = :filterText", nativeQuery = true)
+    List<Character> findByAge(@Param("search") String search, @Param("filterText") String filterText);
+
+    @Query(value = "SELECT * FROM character c WHERE c.name like %:search% and :filterText in c.movies", nativeQuery = true)
+    List<Character> findByMovie(@Param("search") String search, @Param("filterText") String filterText);
+
+    @Query(value = "SELECT * FROM Character c WHERE c.name like %:search% or c.age = %:search% or c.weight = %:search%", nativeQuery = true)
+    List<Character> findInTable(@Param("search") String search);
 
 }

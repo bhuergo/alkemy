@@ -22,7 +22,7 @@ public class Movie implements Serializable {
     private String title;
     @Temporal(TemporalType.DATE)
     private Date creationDate;
-    private Long rating;
+    private Integer rating;
     @ManyToMany
     private List<Character> characters;
 

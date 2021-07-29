@@ -34,11 +34,12 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional
-    public void create(String username, String password) {
-        User user = new User();
-        user.setUsername(username);
-        user.setPassword(encoder.encode(password));
-        user.setRole(Role.USER);
-        userRepository.save(user);
+    public User create(User user) {
+        User u = new User();
+        u.setUsername(user.getUsername());
+        u.setPassword(encoder.encode(user.getPassword()));
+        u.setRole(Role.USER);
+        userRepository.save(u);
+        return u;
     }
 }

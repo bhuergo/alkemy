@@ -4,7 +4,6 @@ import com.alkemyjava.Huergo.entities.Character;
 import com.alkemyjava.Huergo.services.CharacterService;
 import com.alkemyjava.Huergo.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -12,7 +11,7 @@ import org.springframework.web.servlet.view.RedirectView;
 import java.util.Date;
 import java.util.List;
 
-@Controller
+@RestController
 @RequestMapping("/movies")
 public class MovieController {
 

@@ -1,4 +1,4 @@
-package com.alkemyjava.Huergo;
+package com.alkemyjava.Huergo.security;
 
 import com.alkemyjava.Huergo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

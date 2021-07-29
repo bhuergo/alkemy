@@ -3,15 +3,12 @@ package com.alkemyjava.Huergo.controllers;
 import com.alkemyjava.Huergo.entities.User;
 import com.alkemyjava.Huergo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
-@Controller
+import java.util.HashMap;
+
+@RestController
 @RequestMapping("/auth")
 public class LoginController {
 
@@ -26,20 +23,17 @@ public class LoginController {
         return mav;
     }
 
-    @GetMapping("/index")
-    public ModelAndView access() {
-        return new ModelAndView(""); //vista inicial una vez autenticado
-    }
-
     //registro de usuario
-    @GetMapping("/register")
-    public ModelAndView register() {
-        return new ModelAndView(""); //vista formulario registro
-    }
-
-    @PostMapping("/create")
-    public RedirectView save(@RequestParam String username, @RequestParam String password) {
-        userService.create(username,password);
-        return new RedirectView("/auth/login");
+    @PostMapping("/register")
+    public HashMap register(@RequestBody User newUser) {
+        HashMap<String,String> response = new HashMap<>();
+        try {
+            User user = userService.create(newUser);
+            response.put("response","Usuario "+ user.getUsername() +" creado exitosamente");
+            return response;
+        } catch (Exception e) {
+            response.put("response","Ocurrió un error" + e.getMessage());
+            return response;
+        }
     }
 }

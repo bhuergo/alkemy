@@ -19,9 +19,9 @@ public class Character implements Serializable {
     @Lob
     private byte[] image;
     private String name;
-    private Long age;
-    private Long weight;
-    private String history;
+    private Integer age;
+    private Double weight;
+    private String story;
     @ManyToMany(mappedBy = "characters")
     private List<Movie> movies;
 
