@@ -14,8 +14,10 @@ import java.util.stream.Collectors;
 public class UserDetailsImpl implements UserDetails {
     private static final long serialVersionUID = 1L;
 
-    private Long userId;
+    private Long id;
+
     private String username;
+
     private String email;
 
     @JsonIgnore
@@ -23,8 +25,9 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long userId, String username, String email, String password, Collection<? extends GrantedAuthority> authorities) {
-        this.userId = userId;
+    public UserDetailsImpl(Long id, String username, String email, String password,
+                          Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
         this.username = username;
         this.email = email;
         this.password = password;
@@ -49,8 +52,14 @@ public class UserDetailsImpl implements UserDetails {
         return authorities;
     }
 
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
     public Long getUserId() {
-        return userId;
+        return id;
     }
 
     public String getEmail() {
@@ -58,14 +67,11 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     @Override
-    public String getPassword() {
-        return password;
-    }
-
-    @Override
     public String getUsername() {
         return username;
     }
+
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -94,6 +100,6 @@ public class UserDetailsImpl implements UserDetails {
         if (o == null || getClass() != o.getClass())
             return false;
         UserDetailsImpl user = (UserDetailsImpl) o;
-        return Objects.equals(userId, user.userId);
+        return Objects.equals(id, user.id);
     }
 }

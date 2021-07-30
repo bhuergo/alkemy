@@ -12,12 +12,13 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "genre")
 public class Genre implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long genreId;
     private String name;
-    private byte[] image;
+    private String image;
     @OneToMany
     private List<Movie> movies;
 

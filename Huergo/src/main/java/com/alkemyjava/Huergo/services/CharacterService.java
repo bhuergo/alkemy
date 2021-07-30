@@ -1,13 +1,16 @@
 package com.alkemyjava.Huergo.services;
 
 import com.alkemyjava.Huergo.entities.Character;
+import com.alkemyjava.Huergo.entities.CharacterDTO;
 import com.alkemyjava.Huergo.entities.Movie;
+import com.alkemyjava.Huergo.mapper.characterMapper;
 import com.alkemyjava.Huergo.repositories.CharacterRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,21 +20,29 @@ public class CharacterService {
     @Autowired
     CharacterRepository characterRepository;
 
+    characterMapper mapper;
+
     @Transactional(readOnly = true)
-    public List<Character> findAll(Object o) {
+    public List<CharacterDTO> findAll(Object o) {
+        List<CharacterDTO> characters = new ArrayList<>();
+        List<Character> chars;
         if (o instanceof String) {
             String name = (String) o;
-            return characterRepository.findByNameContaining(name);
-        }
-        if (o instanceof Integer) {
+            chars = characterRepository.findByNameContaining(name);
+        } else if (o instanceof Integer) {
             Integer age = (Integer) o;
-            return characterRepository.findByAge(age);
-        }
-        if (o instanceof List) {
+            chars = characterRepository.findByAge(age);
+        } else if (o instanceof List) {
             List<Movie> list = (List<Movie>) o;
-            return characterRepository.findByMoviesIn(list);
+            chars = characterRepository.findByMoviesIn(list);
+        } else {
+            chars = characterRepository.findAll();
         }
-        return characterRepository.showAll();
+
+        for (Character c : chars) {
+            characters.add(mapper.toDTO(c));
+        }
+        return characters;
     }
 
     @Transactional
@@ -63,7 +74,8 @@ public class CharacterService {
         if (!characterRepository.existsByCharacterId(id)) {
             throw new NotFoundException("El personaje no existe");
         }
-        return characterRepository.modify(character.getCharacterId(), character.getImage(), character.getName(), character.getAge(), character.getWeight(), character.getStory());
+        characterRepository.modify(character.getCharacterId(), character.getImage(), character.getName(), character.getAge(), character.getWeight(), character.getStory());
+        return characterRepository.findById(character.getCharacterId()).orElse(null);
     }
 
 }

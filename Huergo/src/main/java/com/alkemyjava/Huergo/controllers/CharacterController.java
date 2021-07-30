@@ -1,6 +1,7 @@
 package com.alkemyjava.Huergo.controllers;
 
 import com.alkemyjava.Huergo.entities.Character;
+import com.alkemyjava.Huergo.entities.CharacterDTO;
 import com.alkemyjava.Huergo.entities.Movie;
 import com.alkemyjava.Huergo.services.CharacterService;
 import javassist.NotFoundException;
@@ -23,9 +24,9 @@ public class CharacterController {
 
     //mostrar listado de personajes y buscar con filtros
     @GetMapping
-    public ResponseEntity<List<Character>> showAll(@RequestParam(required = false) String name,
-                                                   @RequestParam(required = false) Integer age,
-                                                   @RequestParam(required = false) List<Movie> movies) {
+    public ResponseEntity<List<CharacterDTO>> showAll(@RequestParam(required = false) String name,
+                                                      @RequestParam(required = false) Integer age,
+                                                      @RequestParam(required = false) List<Movie> movies) {
         if (name != null) {
             return ResponseEntity.ok(characterService.findAll(name));
         }

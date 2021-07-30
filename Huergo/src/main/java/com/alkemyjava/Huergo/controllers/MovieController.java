@@ -1,7 +1,7 @@
 package com.alkemyjava.Huergo.controllers;
 
-import com.alkemyjava.Huergo.entities.Character;
 import com.alkemyjava.Huergo.entities.Movie;
+import com.alkemyjava.Huergo.entities.MovieDTO;
 import com.alkemyjava.Huergo.services.CharacterService;
 import com.alkemyjava.Huergo.services.MovieService;
 import javassist.NotFoundException;
@@ -10,11 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
 import javax.validation.Valid;
-import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -29,9 +26,9 @@ public class MovieController {
 
     //mostrar listado de películas y buscar con filtros
     @GetMapping
-    public ResponseEntity<List<Movie>> showAll(@RequestParam(required = false) String title,
-                                               @RequestParam(required = false) Long genre,
-                                               @RequestParam(required = false) String order) {
+    public ResponseEntity<List<MovieDTO>> showAll(@RequestParam(required = false) String title,
+                                                  @RequestParam(required = false) Long genre,
+                                                  @RequestParam(required = false) String order) {
         if (title != null) {
             return ResponseEntity.ok(movieService.findAll(title));
         }
