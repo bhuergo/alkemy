@@ -2,15 +2,18 @@ package com.alkemyjava.Huergo.controllers;
 
 import com.alkemyjava.Huergo.entities.Character;
 import com.alkemyjava.Huergo.services.CharacterService;
+import javassist.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.view.RedirectView;
 
-import java.util.HashMap;
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/characters")
 public class CharacterController {
 
@@ -18,58 +21,35 @@ public class CharacterController {
     private CharacterService characterService;
 
     //mostrar listado de personajes
-    @GetMapping("/all")
-    public List<Character> showAll() {
-        return characterService.findAll();
+    @GetMapping
+    public ResponseEntity<List<Character>> showAll() {
+        return ResponseEntity.ok(characterService.findAll());
     }
 
     //crear nuevo personaje
-    @GetMapping("/create")
-    public HashMap create(@RequestParam Character newCharacter) {
-        HashMap<String,String> response = new HashMap<>();
-        try {
-            Character character = characterService.create(newCharacter);
-            response.put("response","Personaje " + character.getName() + " creado exitosamente");
-            return response;
-        } catch (Exception e) {
-            response.put("response","Ocurrió un error" + e.getMessage());
-            return response;
-        }
+    @PostMapping
+    public ResponseEntity<Character> create(@RequestBody @Valid Character newCharacter) throws Exception {
+        return new ResponseEntity<>(characterService.create(newCharacter), HttpStatus.CREATED);
     }
 
     //eliminar un personaje
-    @PostMapping("/delete/{characterId}")
-    public RedirectView delete(@PathVariable Long characterId) {
+    @DeleteMapping("/{characterId}")
+    public ResponseEntity<Void> delete(@PathVariable Long characterId) throws NotFoundException {
         characterService.delete(characterId);
-        return new RedirectView("/characters/all"); //por ejemplo, luego de que se elimina un personaje que redireccione al listado de todos los personajes
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //modificar un personaje
-    @GetMapping("/edit/{characterId}")
-    public ModelAndView edit(@PathVariable Long characterId) {
-        ModelAndView mav = new ModelAndView(""); //vista formulario para introducir nuevos datos
-        mav.addObject("character", characterService.findById(characterId));
-        return mav;
-    }
-
-    @PostMapping("/modify")
-    public RedirectView modify(@RequestParam Long characterId, @RequestParam byte[] image, @RequestParam String name, @RequestParam Long age, @RequestParam Long weight, @RequestParam String story) {
-        characterService.edit(characterId, image, name, age, weight, story);
-        return new RedirectView("/characters/all"); //por ejemplo, luego de que se modifica un personaje que redireccione al listado de todos los personajes
+    @PutMapping
+    public ResponseEntity<Character> edit(@RequestBody @Valid Character character) throws NotFoundException {
+        return ResponseEntity.ok(characterService.edit(character));
     }
 
     //mostrar detalles de un personaje
-    @GetMapping("/details/{characterId}")
-    public ModelAndView details(@PathVariable Long characterId) {
-        ModelAndView mav = new ModelAndView("");
-        mav.addObject("character", characterService.findById(characterId));
-        return mav;
+    @GetMapping("/{characterId}")
+    public ResponseEntity<Character> details(@PathVariable Long characterId) throws NotFoundException {
+        return ResponseEntity.ok(characterService.findById(characterId));
     }
 
-    //búsqueda de personajes
-    @GetMapping("/")
-    @ResponseBody
-    public List<Character> search(@RequestParam(name = "search", required = false) String search, @RequestParam(name = "filter", required = false) String filter, @RequestParam(name = "filterText", required = false) String filterText) {
-        return characterService.filter(search, filter, filterText);
-    }
+    
 }

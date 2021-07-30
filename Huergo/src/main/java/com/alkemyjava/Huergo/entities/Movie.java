@@ -18,7 +18,7 @@ public class Movie implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
     @Lob
-    private byte[] image;
+    private String image;
     private String title;
     @Temporal(TemporalType.DATE)
     private Date creationDate;

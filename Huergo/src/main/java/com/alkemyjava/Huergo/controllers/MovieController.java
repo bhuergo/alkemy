@@ -1,9 +1,11 @@
 package com.alkemyjava.Huergo.controllers;
 
 import com.alkemyjava.Huergo.entities.Character;
+import com.alkemyjava.Huergo.entities.Movie;
 import com.alkemyjava.Huergo.services.CharacterService;
 import com.alkemyjava.Huergo.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
@@ -21,11 +23,9 @@ public class MovieController {
     CharacterService characterService;
 
     //mostrar listado de películas
-    @GetMapping("/all")
-    public ModelAndView showAll() {
-        ModelAndView mav = new ModelAndView(""); //vista en donde se muestren las series y películas
-        mav.addObject("movies", movieService.findAll());
-        return mav;
+    @GetMapping
+    public ResponseEntity<List<Movie>> showAll() {
+        return ResponseEntity.ok(movieService.findAll());
     }
 
     //mostrar detalles de un personaje

@@ -17,7 +17,7 @@ public class Character implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long characterId;
     @Lob
-    private byte[] image;
+    private String image;
     private String name;
     private Integer age;
     private Double weight;

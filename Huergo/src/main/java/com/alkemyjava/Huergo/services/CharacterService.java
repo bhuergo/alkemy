@@ -2,11 +2,11 @@ package com.alkemyjava.Huergo.services;
 
 import com.alkemyjava.Huergo.entities.Character;
 import com.alkemyjava.Huergo.repositories.CharacterRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,14 +39,18 @@ public class CharacterService {
     }
 
     @Transactional(readOnly = true)
-    public Character findById(Long characterId) {
+    public Character findById(Long characterId) throws NotFoundException {
         Optional<Character> characterOptional = characterRepository.findById(characterId);
-        return characterOptional.orElse(null);
+        return characterOptional.orElseThrow(() -> new NotFoundException("El personaje no existe"));
     }
 
     @Transactional
-    public void edit(Long characterId, byte[] image, String name, Long age, Long weight, String story) {
-        characterRepository.modify(characterId, image, name, age, weight, story);
+    public Character edit(Character character) throws NotFoundException {
+        Long id = character.getCharacterId();
+        if (!characterRepository.existsByCharacterId(id)) {
+            throw new NotFoundException("El personaje no existe");
+        }
+        return characterRepository.modify(character.getCharacterId(), character.getImage(), character.getName(), character.getAge(), character.getWeight(), character.getStory());
     }
 
     @Transactional(readOnly = true)
@@ -54,20 +58,4 @@ public class CharacterService {
         return characterRepository.findAll();
     }
 
-    @Transactional(readOnly = true)
-    public List<Character> filter(String search, String filter, String filterText) {
-        if (filter == null) {
-            return characterRepository.findInTable(search);
-        }
-        List<Character> list = new ArrayList<>();
-        switch (filter) {
-            case "age":
-                list = characterRepository.findByAge(search, filterText);
-                break;
-            case "movies":
-                list = characterRepository.findByMovie(search, filterText);
-                break;
-        }
-        return list;
-    }
 }
