@@ -31,7 +31,7 @@ public class MovieService {
     @Transactional(readOnly = true)
     public List<MovieDTO> findAll(Object o) {
         List<MovieDTO> movies = new ArrayList<>();
-        List<Movie> mov = new ArrayList<>();
+        List<Movie> mov;
         if (o instanceof String) {
             String content = (String) o;
             if ("ASC".equals(content)) {
