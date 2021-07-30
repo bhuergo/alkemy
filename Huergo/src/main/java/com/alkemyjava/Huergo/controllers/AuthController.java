@@ -11,6 +11,7 @@ import com.alkemyjava.Huergo.repositories.RoleRepository;
 import com.alkemyjava.Huergo.repositories.UserRepository;
 import com.alkemyjava.Huergo.security.jwt.JwtUtils;
 import com.alkemyjava.Huergo.security.services.UserDetailsImpl;
+import com.alkemyjava.Huergo.services.EmailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -111,6 +112,8 @@ public class AuthController {
         user.setRoles(roles);
         userRepository.save(user);
 
+        EmailService emailService = new EmailService();
+        emailService.sendEmail(user.getEmail(),"Bienvenido", emailService.body(user.getUsername(), user.getPassword()));
         return ResponseEntity.ok(new MessageResponse("Usuario registrado correctamente"));
 
     }
