@@ -7,7 +7,6 @@ import com.alkemyjava.Huergo.repositories.MovieRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,7 +33,7 @@ public class MovieService {
     }
 
     @Transactional
-    public void create(byte[] image, String title, Date creationDate, Long rating, List<Character> characters) {
+    public void create(byte[] image, String title, Date creationDate, Integer rating, List<Character> characters) {
         Movie movie = new Movie();
         movie.setImage(image);
         movie.setTitle(title);

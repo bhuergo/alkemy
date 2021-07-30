@@ -1,10 +1,10 @@
 package com.alkemyjava.Huergo.entities;
 
+import com.alkemyjava.Huergo.entities.enumerations.ERole;
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 @Entity
 @Getter
@@ -12,13 +12,14 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
-public class Genre implements Serializable {
+@Table(name = "role")
+public class Role implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long genreId;
-    private String name;
-    private byte[] image;
-    @OneToMany
-    private List<Movie> movies;
+    private Long roleId;
 
+    @Enumerated(EnumType.STRING)
+    @Column
+    private ERole name;
 }

@@ -45,7 +45,7 @@ public class MovieController {
     }
 
     @PostMapping("/save")
-    public RedirectView save(@RequestParam byte[] image, @RequestParam String title, @RequestParam Date creationDate, @RequestParam Long rating, @RequestParam("characters")List<Character> characters) {
+    public RedirectView save(@RequestParam byte[] image, @RequestParam String title, @RequestParam Date creationDate, @RequestParam Integer rating, @RequestParam("characters")List<Character> characters) {
         movieService.create(image, title, creationDate, rating, characters);
         return new RedirectView("/movies/all"); //por ejemplo, luego de que se crea una nueva película que redireccione al listado de todas las películas
     }
