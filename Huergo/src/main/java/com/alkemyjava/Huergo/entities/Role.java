@@ -9,7 +9,6 @@ import java.io.Serializable;
 @Entity
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "role")

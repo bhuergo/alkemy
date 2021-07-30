@@ -9,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface CharacterRepository extends JpaRepository<Character, Long> {
@@ -23,7 +22,7 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
 
     List<Character> findByAge(Integer age);
 
-    List<Character> findByMovies(List<Long> moviesIds);
+    List<Character> findByMoviesIn(List<Movie> moviesIds);
 
     List<Character> findByNameContaining(String name);
 

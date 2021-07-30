@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,7 +18,7 @@ public class CharacterService {
     CharacterRepository characterRepository;
 
     @Transactional(readOnly = true)
-    public <T> List<Character> findAll(Object o) {
+    public List<Character> findAll(Object o) {
         if (o instanceof String) {
             String name = (String) o;
             return characterRepository.findByNameContaining(name);
@@ -29,12 +28,8 @@ public class CharacterService {
             return characterRepository.findByAge(age);
         }
         if (o instanceof List) {
-            List<Long> movies = new ArrayList<>();
             List<Movie> list = (List<Movie>) o;
-            for (Movie m : list) {
-                movies.add(m.getMovieId());
-            }
-            return characterRepository.findByMovies(movies);
+            return characterRepository.findByMoviesIn(list);
         }
         return characterRepository.showAll();
     }
@@ -69,11 +64,6 @@ public class CharacterService {
             throw new NotFoundException("El personaje no existe");
         }
         return characterRepository.modify(character.getCharacterId(), character.getImage(), character.getName(), character.getAge(), character.getWeight(), character.getStory());
-    }
-
-    @Transactional(readOnly = true)
-    public List<Character> allCharacters() {
-        return characterRepository.findAll();
     }
 
 }

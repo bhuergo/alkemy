@@ -13,11 +13,11 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "movie")
 public class Movie implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long movieId;
-    @Lob
     private String image;
     private String title;
     @Temporal(TemporalType.DATE)

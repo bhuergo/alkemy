@@ -4,6 +4,7 @@ import com.alkemyjava.Huergo.entities.Character;
 import com.alkemyjava.Huergo.entities.Movie;
 import com.alkemyjava.Huergo.repositories.CharacterRepository;
 import com.alkemyjava.Huergo.repositories.MovieRepository;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -22,33 +23,48 @@ public class MovieService {
     CharacterRepository characterRepository;
 
     @Transactional(readOnly = true)
-    public List<Movie> findAll() {
+    public List<Movie> findAll(Object o) {
+        if (o instanceof String) {
+            String content = (String) o;
+            if ("ASC".equals(content)) {
+                return movieRepository.orderAsc();
+            }
+            if ("DESC".equals(content)) {
+                return movieRepository.orderDesc();
+            }
+            return movieRepository.findByTitle(content);
+        }
+        if (o instanceof Long) {
+            Long genreId = (Long) o;
+
+        }
         return movieRepository.showAll();
     }
 
     @Transactional(readOnly = true)
-    public Movie findById(Long movieId) {
+    public Movie findById(Long movieId) throws NotFoundException {
         Optional<Movie> movieOptional = movieRepository.findById(movieId);
-        return movieOptional.orElse(null);
+        return movieOptional.orElseThrow(() -> new NotFoundException("La película o serie no existe"));
     }
 
     @Transactional
-    public void create(byte[] image, String title, Date creationDate, Integer rating, List<Character> characters) {
-        Movie movie = new Movie();
-        movie.setImage(image);
-        movie.setTitle(title);
-        movie.setCreationDate(creationDate);
-        movie.setRating(rating);
+    public Movie create(Movie movie) {
+        Movie m = new Movie();
+        m.setImage(movie.getImage());
+        m.setTitle(movie.getTitle());
+        m.setCreationDate(movie.getCreationDate());
+        m.setRating(movie.getRating());
         List<Character> movieCharacters = new ArrayList<>();
-        for (Character c : characters) {
+        for (Character c : movie.getCharacters()) {
             Optional<Character> characterOptional = characterRepository.findById(c.getCharacterId());
             Character chara = characterOptional.orElse(null);
             if(characterOptional != null) {
                 movieCharacters.add(chara);
             }
         }
-        movie.setCharacters(movieCharacters);
-        movieRepository.save(movie);
+        m.setCharacters(movieCharacters);
+        movieRepository.save(m);
+        return m;
     }
 
     @Transactional
@@ -57,7 +73,11 @@ public class MovieService {
     }
 
     @Transactional
-    public void edit(Long movieId, byte[] image, String title, Date creationDate, Long rating, List<Character> characters) {
-        movieRepository.modify(movieId,image,title,creationDate,rating,characters);
+    public Movie edit(Movie movie) throws NotFoundException {
+        Long id = movie.getMovieId();
+        if (!movieRepository.existsById(id)) {
+            throw new NotFoundException("La película o serie no existe");
+        }
+        return movieRepository.modify(movie.getMovieId(), movie.getImage(), movie.getTitle(), movie.getCreationDate(), movie.getRating(),movie.getCharacters());
     }
 }

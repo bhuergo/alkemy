@@ -19,5 +19,14 @@ public interface MovieRepository extends JpaRepository<Movie,Long> {
 
     @Modifying
     @Query("UPDATE Movie m SET m.image = :image, m.title = :title, m.creationDate = :creationDate, m.rating = :rating, m.characters = :characters WHERE m.movieId = :movieId")
-    void modify(@Param("movieId") Long movieId, @Param("image") byte[] image, @Param("title") String title, @Param("creationDate") Date creationDate, @Param("rating") Long rating, @Param("characters") List<Character> characters);
+    Movie modify(@Param("movieId") Long movieId, @Param("image") String image, @Param("title") String title, @Param("creationDate") Date creationDate, @Param("rating") Integer rating, @Param("characters") List<Character> characters);
+
+    List<Movie> findByTitle(String title);
+
+    @Query(value = "SELECT m FROM Movie m ORDER BY ASC", nativeQuery = true)
+    List<Movie> orderAsc();
+
+    @Query(value = "SELECT m FROM Movie m ORDER BY DESC", nativeQuery = true)
+    List<Movie> orderDesc();
+
 }

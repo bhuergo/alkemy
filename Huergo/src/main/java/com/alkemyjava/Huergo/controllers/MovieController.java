@@ -4,16 +4,21 @@ import com.alkemyjava.Huergo.entities.Character;
 import com.alkemyjava.Huergo.entities.Movie;
 import com.alkemyjava.Huergo.services.CharacterService;
 import com.alkemyjava.Huergo.services.MovieService;
+import javassist.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.RedirectView;
 
+import javax.validation.Valid;
 import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/movies")
 public class MovieController {
 
@@ -22,53 +27,45 @@ public class MovieController {
     @Autowired
     CharacterService characterService;
 
-    //mostrar listado de películas
+    //mostrar listado de películas y buscar con filtros
     @GetMapping
-    public ResponseEntity<List<Movie>> showAll() {
-        return ResponseEntity.ok(movieService.findAll());
+    public ResponseEntity<List<Movie>> showAll(@RequestParam(required = false) String title,
+                                               @RequestParam(required = false) Long genre,
+                                               @RequestParam(required = false) String order) {
+        if (title != null) {
+            return ResponseEntity.ok(movieService.findAll(title));
+        }
+        if (genre != null) {
+            return ResponseEntity.ok(movieService.findAll(genre));
+        }
+        if (order != null) {
+            return ResponseEntity.ok(movieService.findAll(order));
+        }
+        return ResponseEntity.ok(movieService.findAll(null));
     }
 
-    //mostrar detalles de un personaje
-    @GetMapping("/details/{movieId}")
-    public ModelAndView details(@PathVariable Long movieId) {
-        ModelAndView mav = new ModelAndView("");
-        mav.addObject("movie", movieService.findById(movieId));
-        return mav;
+    //mostrar detalles de una película
+    @GetMapping("/{movieId}")
+    public ResponseEntity<Movie> details(@PathVariable Long movieId) throws NotFoundException {
+        return ResponseEntity.ok(movieService.findById(movieId));
     }
 
     //crear nueva película
-    @GetMapping("/create")
-    public ModelAndView create() {
-        ModelAndView mav = new ModelAndView(""); //vista formulario para crear la película o serie
-        mav.addObject("characters", characterService.allCharacters());
-        return mav;
-    }
-
-    @PostMapping("/save")
-    public RedirectView save(@RequestParam byte[] image, @RequestParam String title, @RequestParam Date creationDate, @RequestParam Integer rating, @RequestParam("characters")List<Character> characters) {
-        movieService.create(image, title, creationDate, rating, characters);
-        return new RedirectView("/movies/all"); //por ejemplo, luego de que se crea una nueva película que redireccione al listado de todas las películas
+    @PostMapping
+    public ResponseEntity<Movie> create(@RequestBody @Valid Movie newMovie) {
+        return new ResponseEntity<>(movieService.create(newMovie), HttpStatus.CREATED);
     }
 
     //eliminar una película
-    @PostMapping("/delete/{movieId}")
-    public RedirectView delete(@PathVariable Long movieId) {
+    @DeleteMapping("/{movieId}")
+    public ResponseEntity<Void> delete(@PathVariable Long movieId) throws NotFoundException {
         movieService.delete(movieId);
-        return new RedirectView("/movies/all"); //por ejemplo, luego de que se elimina una película que redireccione al listado de todas las películas
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     //modificar una película
-    @GetMapping("/edit/{movieId}")
-    public ModelAndView edit(@PathVariable Long movieId) {
-        ModelAndView mav = new ModelAndView(""); //vista formulario para introducir nuevos datos
-        mav.addObject("movie", movieService.findById(movieId));
-        mav.addObject("characters", characterService.allCharacters());
-        return mav;
-    }
-
-    @PostMapping("/modify")
-    public RedirectView modify(@RequestParam Long movieId, @RequestParam byte[] image, @RequestParam String title, @RequestParam Date creationDate, @RequestParam Long rating, @RequestParam("characters")List<Character> characters) {
-        movieService.edit(movieId, image, title, creationDate, rating, characters);
-        return new RedirectView("/movies/all"); //por ejemplo, luego de que se modifica una película que redireccione al listado de todas las películas
+    @PutMapping
+    public ResponseEntity<Movie> edit(@RequestBody @Valid Movie movie) throws NotFoundException {
+        return ResponseEntity.ok(movieService.edit(movie));
     }
 }

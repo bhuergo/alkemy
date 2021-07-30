@@ -12,11 +12,11 @@ import java.util.List;
 @ToString
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "mCharacter")
 public class Character implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long characterId;
-    @Lob
     private String image;
     private String name;
     private Integer age;

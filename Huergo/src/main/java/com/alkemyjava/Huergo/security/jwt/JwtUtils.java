@@ -14,10 +14,10 @@ import java.util.Date;
 public class JwtUtils {
     private static final Logger logger = LoggerFactory.getLogger(JwtUtils.class);
 
-    @Value("${alkemyjava.app.jwtSecret}")
+    @Value("${alkemy.Huergo.jwtSecret}")
     private String jwtSecret;
 
-    @Value("${alkemyjava.app.jwtExpirationMs}")
+    @Value("${alkemy.Huergo.jwtExpirationMs}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
