@@ -1,12 +1,14 @@
 package com.alkemyjava.Huergo.services;
 
 import com.alkemyjava.Huergo.entities.Character;
+import com.alkemyjava.Huergo.entities.Movie;
 import com.alkemyjava.Huergo.repositories.CharacterRepository;
 import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +19,23 @@ public class CharacterService {
     CharacterRepository characterRepository;
 
     @Transactional(readOnly = true)
-    public List<Character> findAll() {
+    public <T> List<Character> findAll(Object o) {
+        if (o instanceof String) {
+            String name = (String) o;
+            return characterRepository.findByNameContaining(name);
+        }
+        if (o instanceof Integer) {
+            Integer age = (Integer) o;
+            return characterRepository.findByAge(age);
+        }
+        if (o instanceof List) {
+            List<Long> movies = new ArrayList<>();
+            List<Movie> list = (List<Movie>) o;
+            for (Movie m : list) {
+                movies.add(m.getMovieId());
+            }
+            return characterRepository.findByMovies(movies);
+        }
         return characterRepository.showAll();
     }
 

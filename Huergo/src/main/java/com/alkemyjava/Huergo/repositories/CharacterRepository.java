@@ -21,9 +21,11 @@ public interface CharacterRepository extends JpaRepository<Character, Long> {
     @Query("UPDATE Character c SET c.image = :image, c.name = :name, c.age = :age, c.weight = :weight, c.story = :story WHERE c.characterId = :characterId")
     Character modify(@Param("characterId") Long characterId, @Param("image") String image, @Param("name") String name, @Param("age") Integer age, @Param("weight") Double weight, @Param("story") String story);
 
-    Optional<Character> findByAge(Integer age);
+    List<Character> findByAge(Integer age);
 
-    Optional<Character> findByMovies(List<Movie> movies);
+    List<Character> findByMovies(List<Long> moviesIds);
+
+    List<Character> findByNameContaining(String name);
 
     Boolean existsByCharacterId(Long id);
 

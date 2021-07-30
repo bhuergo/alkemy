@@ -1,6 +1,7 @@
 package com.alkemyjava.Huergo.controllers;
 
 import com.alkemyjava.Huergo.entities.Character;
+import com.alkemyjava.Huergo.entities.Movie;
 import com.alkemyjava.Huergo.services.CharacterService;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -20,10 +21,21 @@ public class CharacterController {
     @Autowired
     private CharacterService characterService;
 
-    //mostrar listado de personajes
+    //mostrar listado de personajes y buscar con filtros
     @GetMapping
-    public ResponseEntity<List<Character>> showAll() {
-        return ResponseEntity.ok(characterService.findAll());
+    public ResponseEntity<List<Character>> showAll(@RequestParam(required = false) String name,
+                                                   @RequestParam(required = false) Integer age,
+                                                   @RequestParam(required = false) List<Movie> movies) {
+        if (name != null) {
+            return ResponseEntity.ok(characterService.findAll(name));
+        }
+        if (age != null) {
+            return ResponseEntity.ok(characterService.findAll(age));
+        }
+        if (movies != null) {
+            return ResponseEntity.ok(characterService.findAll(movies));
+        }
+        return ResponseEntity.ok(characterService.findAll(null));
     }
 
     //crear nuevo personaje
@@ -51,5 +63,4 @@ public class CharacterController {
         return ResponseEntity.ok(characterService.findById(characterId));
     }
 
-    
 }
